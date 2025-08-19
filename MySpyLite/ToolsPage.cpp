@@ -6,6 +6,7 @@
 #include "ToolsPage.h"
 #include "afxdialogex.h"
 #include "SendMsgDlg.h"
+#include "Constants.h"
 
 
 // CToolsPage 对话框

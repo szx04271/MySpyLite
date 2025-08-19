@@ -7,6 +7,7 @@
 #include "MySpyLite.h"
 #include "MySpyLiteDlg.h"
 #include "afxdialogex.h"
+#include "Constants.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -58,7 +59,7 @@ BOOL CMySpyLiteDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	// : 在此添加额外的初始化代码
+	SetWindowTextW(g_title);
 
 	m_wndFinder.SetFont(&m_font);
 
