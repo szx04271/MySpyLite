@@ -5,7 +5,7 @@
 #include "MySpyLite.h"
 #include "WindowsPage.h"
 #include "afxdialogex.h"
-
+#include "Constants.h"
 
 // CWindowsPage 对话框
 

@@ -6,6 +6,7 @@
 #include "ToolsPage.h"
 #include "afxdialogex.h"
 #include "SendMsgDlg.h"
+#include "Constants.h"
 
 
 // CToolsPage 对话框
@@ -184,8 +185,7 @@ void CToolsPage::OnTimer(UINT_PTR nIDEvent)
 			KillTimer(1);
 			str.Format(FMT_PTR, hwnd);
 			GetParent()->GetParent()->SendMessageW(WM_QUERYRESULT, 0, (LPARAM)(LPCWSTR)str);
-			// TODO: store default title elsewhere
-			GetParent()->GetParent()->SetWindowTextW(L"New SpyLite v1.5 by szx0427");
+			GetParent()->GetParent()->SetWindowTextW(g_title);
 			MessageBeep(MB_OK);
 			CTabPage::OnTimer(nIDEvent);
 			return;

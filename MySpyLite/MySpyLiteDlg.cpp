@@ -7,6 +7,7 @@
 #include "MySpyLite.h"
 #include "MySpyLiteDlg.h"
 #include "afxdialogex.h"
+#include "Constants.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -58,7 +59,7 @@ BOOL CMySpyLiteDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	// : 在此添加额外的初始化代码
+	SetWindowTextW(g_title);
 
 	m_wndFinder.SetFont(&m_font);
 
@@ -749,9 +750,7 @@ void CMySpyLiteDlg::UpdateToolsData(HWND hWnd)
 
 void CMySpyLiteDlg::OnOK()
 {
-	// : 在此添加专用代码和/或调用基类
-
-	//CDialog::OnOK();
+	// 此处留空，不调用基类，以防止按enter时自动关闭程序
 }
 
 
@@ -766,7 +765,6 @@ BOOL CMySpyLiteDlg::PreTranslateMessage(MSG* pMsg)
 	}
 	else if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN && GetFocus() == GetDlgItem(IDC_HWND))
 	{
-		// TODO: 看看当焦点不在编辑框上时按enter会不会关闭程序
 		OnBnClickedQuery();
 		return TRUE;
 	}

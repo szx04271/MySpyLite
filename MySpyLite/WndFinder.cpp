@@ -2,6 +2,7 @@
 #include "MySpyLite.h"
 #include "WndFinder.h"
 #include "resource.h"
+#include "Constants.h"
 
 
 CWndFinder::CWndFinder()
