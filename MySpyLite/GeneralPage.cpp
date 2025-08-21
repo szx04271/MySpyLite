@@ -21,7 +21,7 @@ CGeneralPage::CGeneralPage(CWnd* pParent /*=nullptr*/)
 	, m_wndRc(_T(""))
 	, m_tid(0)
 	, m_title(_T(""))
-{
+	, m_relativeRc(_T("")) {
 	m_hBkBrush = GetSysColorBrush(COLOR_WINDOW);
 }
 
@@ -40,6 +40,7 @@ void CGeneralPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_RECT, m_wndRc);
 	DDX_Text(pDX, IDC_TID, m_tid);
 	DDX_Text(pDX, IDC_TITLE, m_title);
+	DDX_Text(pDX, IDC_CLIENT_RELATIVE_POS, m_relativeRc);
 }
 
 

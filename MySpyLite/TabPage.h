@@ -11,5 +11,6 @@ public:
 	virtual void OnOK();
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual BOOL OnInitDialog();
 };
 

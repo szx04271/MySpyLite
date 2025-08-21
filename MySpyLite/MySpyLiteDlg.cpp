@@ -72,16 +72,16 @@ BOOL CMySpyLiteDlg::OnInitDialog()
 	m_tab.InsertItem(5, L"工具");
 	m_tab.InsertItem(6, L"关于");
 
+	// calc sub dialog rect using tab rect
 	CRect rc;
-	m_tab.GetClientRect(&rc);
-	CDC *pDC = GetDC();
-	float factorX = pDC->GetDeviceCaps(LOGPIXELSX) / 96.0;
-	float factorY = pDC->GetDeviceCaps(LOGPIXELSY) / 96.0;
-	ReleaseDC(pDC);
-	rc.top += 24 * factorY;
-	rc.bottom -= 5 * factorY;
-	rc.left += 5 * factorX;
-	rc.right -= 5 * factorX;
+	m_tab.GetWindowRect(&rc);
+	m_tab.ScreenToClient(&rc);
+	m_tab.AdjustRect(FALSE, &rc);
+	
+	auto dc = GetDC();
+	auto dpiFactor = dc->GetDeviceCaps(LOGPIXELSX) / 96.f;
+	rc.top += 2 * dpiFactor;
+	ReleaseDC(dc);
 
 	m_page1.Create(IDD_PAGE_GENERAL, &m_tab);
 	m_page1.MoveWindow(&rc);
@@ -255,26 +255,38 @@ void CMySpyLiteDlg::UpdateGeneralData(HWND hWnd)
 {
 	CWnd *pWnd = CWnd::FromHandle(hWnd);
 	WCHAR szBuf[1024];
-	CRect rc;
+	CRect wndRc, clientRc;
 	DWORD dw;
 	
 	pWnd->GetWindowTextW(m_page1.m_title);
 	::GetClassNameW(hWnd, szBuf, 1024);
 	m_page1.m_clsName = szBuf;
-	pWnd->GetWindowRect(&rc);
+	pWnd->GetWindowRect(&wndRc);
 	m_page1.m_wndRc.Format(
 		L"LT(%d, %d) RB(%d, %d) [%d x %d]",
-		rc.left, rc.top,
-		rc.right, rc.bottom,
-		rc.Width(), rc.Height()
+		wndRc.left, wndRc.top,
+		wndRc.right, wndRc.bottom,
+		wndRc.Width(), wndRc.Height()
 	);
-	pWnd->GetClientRect(&rc);
+	pWnd->GetClientRect(&clientRc);
 	m_page1.m_cltRc.Format(
 		L"LT(%d, %d) RB(%d, %d) [%d x %d]",
-		rc.left, rc.top,
-		rc.right, rc.bottom,
-		rc.Width(), rc.Height()
+		clientRc.left, clientRc.top,
+		clientRc.right, clientRc.bottom,
+		clientRc.Width(), clientRc.Height()
 	);
+
+	// get client relative coord
+	pWnd->ClientToScreen(&clientRc);
+	CRect relativeRc{ clientRc.left - wndRc.left,clientRc.top - wndRc.top,
+		clientRc.right - wndRc.left, clientRc.bottom - wndRc.top };
+	m_page1.m_relativeRc.Format(
+		L"LT(%d, %d) RB(%d, %d) [%d x %d]",
+		relativeRc.left, relativeRc.top,
+		relativeRc.right, relativeRc.bottom,
+		relativeRc.Width(), relativeRc.Height()
+	);
+
 	m_page1.m_ctrlId = pWnd->GetDlgCtrlID();
 	m_page1.m_tid = GetWindowThreadProcessId(hWnd, &m_page1.m_pid);
 	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, m_page1.m_pid);
@@ -565,70 +577,81 @@ void CMySpyLiteDlg::UpdateStylesData(HWND hWnd)
 
 void CMySpyLiteDlg::UpdateClassData(HWND hWnd)
 {
-	WCHAR szBuf[1024];
-	GetClassNameW(hWnd, szBuf, 1024);
-	m_page3.m_clsname = szBuf;
+	WCHAR cls_name[1024];
+	GetClassNameW(hWnd, cls_name, 1024);
+	m_page3.m_clsname = cls_name;
 	
-	DWORD dwStyles = (DWORD)GetClassLongW(hWnd, GCL_STYLE);
-	m_page3.m_clsstyles.Format(L"0x%08XL", dwStyles);
+	// 跨进程调用GetClassInfoEx会失败，只能用GetClassLongPtr了
+	HMODULE cls_hmod = reinterpret_cast<HMODULE>(GetClassLongPtrW(hWnd, GCLP_HMODULE));
+	auto cls_atom = static_cast<UINT>(GetClassLongPtrW(hWnd, GCW_ATOM));
+	auto cls_style = static_cast<DWORD>(GetClassLongPtrW(hWnd, GCL_STYLE));
+
+	m_page3.m_clsHmodule.Format(L"0x" FMT_PTR, cls_hmod);
+	m_page3.m_atom.Format(L"%u", cls_atom);
+	m_page3.m_hbrBkgnd.Format(L"0x" FMT_PTR, GetClassLongPtrW(hWnd, GCLP_HBRBACKGROUND));
+	m_page3.m_clsHicon.Format(L"0x" FMT_PTR, GetClassLongPtrW(hWnd, GCLP_HICON));
+	m_page3.m_clsHiconSm.Format(L"0x" FMT_PTR, GetClassLongPtrW(hWnd, GCLP_HICONSM));
+	m_page3.m_clsWndproc.Format(L"0x%p", GetClassLongPtrW(hWnd, GCLP_WNDPROC));
+
+	m_page3.m_clsstyles.Format(L"0x%08XL", cls_style);
 	m_page3.m_list_clsstyle.DeleteAllItems();
 	int i = 0;
-	if (dwStyles & CS_BYTEALIGNCLIENT)
+	if (cls_style & CS_BYTEALIGNCLIENT)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_BYTEALIGNCLIENT");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00001000L");
 	}
-	if (dwStyles & CS_BYTEALIGNWINDOW)
+	if (cls_style & CS_BYTEALIGNWINDOW)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_BYTEALIGNWINDOW");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00002000L");
 	}
-	if (dwStyles & CS_CLASSDC)
+	if (cls_style & CS_CLASSDC)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_CLASSDC");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000040L");
 	}
-	if (dwStyles & CS_DBLCLKS)
+	if (cls_style & CS_DBLCLKS)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_DBLCLKS");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000008L");
 	}
-	if (dwStyles & CS_DROPSHADOW)
+	if (cls_style & CS_DROPSHADOW)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_DROPSHADOW");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00020000L");
 	}
-	if (dwStyles & CS_GLOBALCLASS)
+	if (cls_style & CS_GLOBALCLASS)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_GLOBALCLASS");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00004000L");
 	}
-	if (dwStyles & CS_HREDRAW)
+	if (cls_style & CS_HREDRAW)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_HREDRAW");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000002L");
 	}
-	if (dwStyles & CS_NOCLOSE)
+	if (cls_style & CS_NOCLOSE)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_NOCLOSE");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000200L");
 	}
-	if (dwStyles & CS_OWNDC)
+	if (cls_style & CS_OWNDC)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_OWNDC");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000020L");
 	}
-	if (dwStyles & CS_PARENTDC)
+	if (cls_style & CS_PARENTDC)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_PARENTDC");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000080L");
 	}
-	if (dwStyles & CS_SAVEBITS)
+	if (cls_style & CS_SAVEBITS)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_SAVEBITS");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000800L");
 	}
-	if (dwStyles & CS_VREDRAW)
+	if (cls_style & CS_VREDRAW)
 	{
 		m_page3.m_list_clsstyle.InsertItem(i, L"CS_VREDRAW");
 		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000001L");
@@ -648,9 +671,8 @@ void CMySpyLiteDlg::UpdateWindowsData(HWND hWnd)
 	m_page4.UpdateData(FALSE);
 }
 
-void CMySpyLiteDlg::UpdateImageData(HWND hWnd)
-{
-	CImage &img = m_page5.m_img;
+void CMySpyLiteDlg::UpdateImageData(HWND hWnd) {
+	CImage& img = m_page5.m_img;
 
 	if (!img.IsNull())
 		img.Destroy();
@@ -669,11 +691,11 @@ void CMySpyLiteDlg::UpdateImageData(HWND hWnd)
 		rc.bottom = cyScreen - 1;
 
 	if (
-		rc.left > cxScreen - 1 || 
-		rc.right < 0 || 
-		rc.top > cyScreen - 1 || 
-		rc.bottom < 0 || 
-		rc.Width() <= 0 || 
+		rc.left > cxScreen - 1 ||
+		rc.right < 0 ||
+		rc.top > cyScreen - 1 ||
+		rc.bottom < 0 ||
+		rc.Width() <= 0 ||
 		rc.Height() <= 0
 		)
 	{
@@ -721,6 +743,7 @@ void CMySpyLiteDlg::UpdateImageData(HWND hWnd)
 	img.ReleaseDC();
 	::ReleaseDC(NULL, hDeskDc);
 	m_page5.Invalidate(TRUE);
+	m_page5.UpdateWindow();
 }
 
 void CMySpyLiteDlg::UpdateToolsData(HWND hWnd)
@@ -785,7 +808,7 @@ std::wstring CMySpyLiteDlg::NTFilePath2DosFilePath(std::wstring name)
 	}
 	for (int i = 0; szDriveStr[i]; i += 4)
 	{
-		memcpy(szDrive, szDriveStr + i, 2*sizeof(WCHAR));
+		wcsncpy(szDrive, szDriveStr + i, 2);
 		if (!QueryDosDeviceW(szDrive, szDeviceStr, MAX_PATH))
 		{
 			return L"";

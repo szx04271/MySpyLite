@@ -15,7 +15,7 @@ CClassPage::CClassPage(CWnd* pParent /*=nullptr*/)
 	: CTabPage(IDD_PAGE_CLASS, pParent)
 	, m_clsname(_T(""))
 	, m_clsstyles(_T("0x00000000L"))
-{
+	, m_atom(_T("")), m_hbrBkgnd(_T("")), m_clsHicon(_T("")), m_clsHiconSm(_T("")), m_clsHmodule(_T("")), m_clsWndproc(_T("")) {
 
 }
 
@@ -29,6 +29,12 @@ void CClassPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CLASS_NAME_2, m_clsname);
 	DDX_Text(pDX, IDC_CLASS_STYLE, m_clsstyles);
 	DDX_Control(pDX, IDC_LIST_CLASS_STYLES, m_list_clsstyle);
+	DDX_Text(pDX, IDC_CLASS_ATOM, m_atom);
+	DDX_Text(pDX, IDC_CLASS_HBRBKGND, m_hbrBkgnd);
+	DDX_Text(pDX, IDC_CLASS_HICON, m_clsHicon);
+	DDX_Text(pDX, IDC_CLASS_HICONSM, m_clsHiconSm);
+	DDX_Text(pDX, IDC_CLASS_HMODULE, m_clsHmodule);
+	DDX_Text(pDX, IDC_CLASS_WNDPROC, m_clsWndproc);
 }
 
 

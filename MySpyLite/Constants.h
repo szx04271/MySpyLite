@@ -8,6 +8,7 @@
 #define PLATFORM_STR L"64位"
 #endif
 
-#define VERSION_STR L"1.5"
+// 'f'=fork
+#define VERSION_STR L"f1.6"
 
-inline constexpr const wchar_t* g_title = L"New Spylite [" PLATFORM_STR L"] v" VERSION_STR L" - by szx0427";
+inline constexpr const wchar_t* g_title = L"New Spylite [" PLATFORM_STR L"] 版本 " VERSION_STR L" - by szx0427";

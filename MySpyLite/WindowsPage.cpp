@@ -60,9 +60,9 @@ BOOL CWindowsPage::OnInitDialog()
 	m_list_children.SetExtendedStyle(m_list_children.GetExtendedStyle() | LVS_EX_FULLROWSELECT);
 	CRect rc; m_list_children.GetClientRect(&rc);
 	int cx = rc.Width() - GetSystemMetrics(SM_CXVSCROLL);
-	m_list_children.InsertColumn(0, L"窗口句柄", LVCFMT_LEFT, cx * 1 / 5);
-	m_list_children.InsertColumn(1, L"窗口类名", LVCFMT_LEFT, cx * 2 / 5);
-	m_list_children.InsertColumn(2, L"窗口标题", LVCFMT_LEFT, cx * 2 / 5);
+	m_list_children.InsertColumn(0, L"窗口句柄", LVCFMT_LEFT, cx * 2 / 10);
+	m_list_children.InsertColumn(1, L"窗口类名", LVCFMT_LEFT, cx * 3 / 10);
+	m_list_children.InsertColumn(2, L"窗口标题", LVCFMT_LEFT, cx * 5 / 10);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE

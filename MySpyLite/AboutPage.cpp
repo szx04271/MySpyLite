@@ -38,7 +38,7 @@ END_MESSAGE_MAP()
 BOOL CAboutPage::OnInitDialog() {
 	CTabPage::OnInitDialog();
 
-	GetDlgItem(IDC_VERSION_DISPLAY)->SetWindowTextW(L"版本 " VERSION_STR);
+	GetDlgItem(IDC_VERSION_DISPLAY)->SetWindowTextW(L"版本 " VERSION_STR " (forked from ver1.5)");
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE

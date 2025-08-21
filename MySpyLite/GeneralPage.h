@@ -31,4 +31,5 @@ public:
 	DWORD m_tid;
 	CString m_title;
 	afx_msg void OnNMClickOpenDir(NMHDR *pNMHDR, LRESULT *pResult);
+	CString m_relativeRc;
 };

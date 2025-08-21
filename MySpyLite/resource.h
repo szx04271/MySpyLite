@@ -28,6 +28,7 @@
 #define IDC_CLIENT_RECT                 1016
 #define IDC_OPEN_DIR                    1017
 #define IDC_BASIC_STYLES                1018
+#define IDC_CLIENT_RELATIVE_POS         1018
 #define IDC_LIST_STYLES                 1020
 #define IDC_LIST_EXSTYLES               1021
 #define IDC_EX_STYLES                   1022
@@ -84,6 +85,13 @@
 #define IDC_SYSLINK2                    1073
 #define IDC_NFC_DOC                     1073
 #define IDC_VERSION_DISPLAY             1074
+#define IDC_CLASS_ATOM                  1075
+#define IDC_CLASS_HBRBKGND              1076
+#define IDC_CLASS_HICON                 1077
+#define IDC_CLASS_HICONSM               1078
+#define IDC_CLASS_HMODULE               1079
+#define IDC_EDIT6                       1081
+#define IDC_CLASS_WNDPROC               1081
 
 // Next default values for new objects
 // 
@@ -91,7 +99,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1075
+#define _APS_NEXT_CONTROL_VALUE         1077
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -26,4 +26,10 @@ public:
 	CString m_clsstyles;
 	CListCtrl m_list_clsstyle;
 	afx_msg void OnNMClickClassstylesMsdn(NMHDR *pNMHDR, LRESULT *pResult);
+	CString m_atom;
+	CString m_hbrBkgnd;
+	CString m_clsHicon;
+	CString m_clsHiconSm;
+	CString m_clsHmodule;
+	CString m_clsWndproc;
 };

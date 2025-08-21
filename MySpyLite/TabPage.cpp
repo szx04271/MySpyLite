@@ -24,3 +24,12 @@ BOOL CTabPage::PreTranslateMessage(MSG* pMsg)
 }
 
 
+
+BOOL CTabPage::OnInitDialog() {
+	CDialog::OnInitDialog();
+
+	EnableThemeDialogTexture(m_hWnd, ETDT_ENABLETAB);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
+}

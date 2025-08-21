@@ -128,7 +128,7 @@ void CToolsPage::OnBnClickedKillNormal()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::PostMessageW(m_hCurWnd, WM_CLOSE, 0, 0);
+	::SendMessageW(m_hCurWnd, WM_CLOSE, 0, 0);
 }
 
 
@@ -154,7 +154,7 @@ void CToolsPage::OnBnClickedKillSendmsg()
 
 	GetDlgItem(IDC_KILL_SENDMSG)->SetWindowTextW(L"执行中 请稍候");
 	GetDlgItem(IDC_KILL_SENDMSG)->EnableWindow(FALSE);
-	for (UINT msg = 0; msg < 0xffff; msg++)
+	for (UINT msg = 0; msg < 0xffff; ++msg)
 		::PostMessageW(m_hCurWnd, msg, 0, 0);
 	GetDlgItem(IDC_KILL_SENDMSG)->SetWindowTextW(L"强力关闭 (方式2) (不推荐)");
 	GetDlgItem(IDC_KILL_SENDMSG)->EnableWindow(TRUE);
@@ -223,7 +223,7 @@ void CToolsPage::OnBnClickedGetFontInfo()
 		lf.lfClipPrecision = 2;
 		lf.lfQuality = 2;
 		lf.lfPitchAndFamily = 34;
-		wcscpy(lf.lfFaceName, L"System");
+		wcscpy(lf.lfFaceName, L"[默认字体] System");
 	}
 
 	CString str;
