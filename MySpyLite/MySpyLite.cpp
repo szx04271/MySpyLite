@@ -48,8 +48,10 @@ BOOL CMySpyLiteApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
-
-
+	
+	InitWndStyleMap();
+	InitWndExStyleMap();
+	InitClsStyleMap();
 
 	// 标准初始化
 	// 如果未使用这些功能并希望减小
@@ -86,5 +88,73 @@ BOOL CMySpyLiteApp::InitInstance()
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
+}
+
+void CMySpyLiteApp::InitWndStyleMap() {
+	m_wndStyleMap = {
+		SM(WS_BORDER),
+		SM(WS_CAPTION),
+		{WS_CHILD, L"WS_CHILD (WS_CHILDWINDOW)"},
+		SM(WS_CLIPCHILDREN),
+		SM(WS_CLIPSIBLINGS),
+		SM(WS_DISABLED),
+		SM(WS_DLGFRAME),
+		SM(WS_GROUP),
+		SM(WS_HSCROLL),
+		SM(WS_MAXIMIZE),
+		SM(WS_MAXIMIZEBOX),
+		{WS_MINIMIZE, L"WS_MINIMIZE (WS_ICONIC)"},
+		SM(WS_MINIMIZEBOX),
+		SM(WS_POPUP),
+		{WS_SIZEBOX, L"WS_SIZEBOX (WS_THICKFRAME)"},
+		SM(WS_SYSMENU),
+		SM(WS_TABSTOP),
+		SM(WS_VISIBLE),
+		SM(WS_VSCROLL)
+	};
+}
+
+void CMySpyLiteApp::InitWndExStyleMap() {
+	m_wndExStyleMap = {
+		SM(WS_EX_ACCEPTFILES),
+		SM(WS_EX_APPWINDOW),
+		SM(WS_EX_CLIENTEDGE),
+		SM(WS_EX_COMPOSITED),
+		SM(WS_EX_CONTEXTHELP),
+		SM(WS_EX_CONTROLPARENT),
+		SM(WS_EX_DLGMODALFRAME),
+		SM(WS_EX_LAYERED),
+		SM(WS_EX_LAYOUTRTL),
+		SM(WS_EX_LEFTSCROLLBAR),
+		SM(WS_EX_MDICHILD),
+		SM(WS_EX_NOACTIVATE),
+		SM(WS_EX_NOINHERITLAYOUT),
+		SM(WS_EX_NOPARENTNOTIFY),
+		SM(WS_EX_NOREDIRECTIONBITMAP),
+		SM(WS_EX_RIGHT),
+		SM(WS_EX_RTLREADING),
+		SM(WS_EX_STATICEDGE),
+		SM(WS_EX_TOOLWINDOW),
+		SM(WS_EX_TOPMOST),
+		SM(WS_EX_TRANSPARENT),
+		SM(WS_EX_WINDOWEDGE)
+	};
+}
+
+void CMySpyLiteApp::InitClsStyleMap() {
+	m_clsStyleMap = {
+		SM(CS_BYTEALIGNCLIENT),
+		SM(CS_BYTEALIGNWINDOW),
+		SM(CS_CLASSDC),
+		SM(CS_DBLCLKS),
+		SM(CS_DROPSHADOW),
+		SM(CS_GLOBALCLASS),
+		SM(CS_HREDRAW),
+		SM(CS_NOCLOSE),
+		SM(CS_OWNDC),
+		SM(CS_PARENTDC),
+		SM(CS_SAVEBITS),
+		SM(CS_VREDRAW)
+	};
 }
 

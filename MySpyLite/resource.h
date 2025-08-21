@@ -88,8 +88,13 @@
 #define IDC_CLASS_ATOM                  1075
 #define IDC_CLASS_HBRBKGND              1076
 #define IDC_CLASS_HICON                 1077
+#define IDC_ADD_WND_STYLE               1077
 #define IDC_CLASS_HICONSM               1078
+#define IDC_REMOVE_WND_STYLE            1078
 #define IDC_CLASS_HMODULE               1079
+#define IDC_ADD_WND_EXSTYLE             1079
+#define IDC_BUTTON4                     1080
+#define IDC_REMOVE_WND_EXSTYLE          1080
 #define IDC_EDIT6                       1081
 #define IDC_CLASS_WNDPROC               1081
 
@@ -99,7 +104,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1077
+#define _APS_NEXT_CONTROL_VALUE         1078
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

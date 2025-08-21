@@ -25,7 +25,11 @@ public:
 	CListCtrl m_list_exstyles;
 	CString m_stc_styles;
 	CString m_stc_exstyles;
+	DWORD m_styles{}, m_exstyles{};
 	virtual BOOL OnInitDialog();
 	afx_msg void OnNMClickStylesMsdn(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClickExstylesMsdn(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedRemoveWndStyle();
+	void SetStyle(DWORD value);
+	void SetExStyle(DWORD value);
 };

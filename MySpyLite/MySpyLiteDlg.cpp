@@ -8,6 +8,7 @@
 #include "MySpyLiteDlg.h"
 #include "afxdialogex.h"
 #include "Constants.h"
+#include "Utils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -174,6 +175,7 @@ void CMySpyLiteDlg::OnBnClickedQuery()
 		MessageBoxW(L"窗口句柄无效。");
 		return;
 	}
+	theApp.m_curWnd = hWnd;
 
 	UpdateGeneralData(hWnd);
 	UpdateStylesData(hWnd);
@@ -197,7 +199,6 @@ LRESULT CMySpyLiteDlg::OnQueryResult(WPARAM, LPARAM lParam)
 
 void CMySpyLiteDlg::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	// : 在此添加控件通知处理程序代码
 	switch (m_tabCursel)
 	{
 	case 0:
@@ -303,7 +304,7 @@ void CMySpyLiteDlg::UpdateGeneralData(HWND hWnd)
 		}
 		else
 		{
-			std::wstring filePath = NTFilePath2DosFilePath(dosPath);
+			std::wstring filePath = NtFilePathToDosPath(dosPath);
 			m_page1.m_path = filePath.c_str();
 		}
 
@@ -317,262 +318,9 @@ void CMySpyLiteDlg::UpdateStylesData(HWND hWnd)
 	CWnd *pWnd = CWnd::FromHandle(hWnd);
 	DWORD dwStyle = pWnd->GetStyle();
 	DWORD dwExStyle = pWnd->GetExStyle();
-	m_page2.m_stc_styles.Format(L"基本样式：0x%08XL", dwStyle);
-	m_page2.m_stc_exstyles.Format(L"扩展样式：0x%08XL", dwExStyle);
-	m_page2.m_list_styles.DeleteAllItems();
-	m_page2.m_list_exstyles.DeleteAllItems();
 
-	int i = 0;
-	if (dwStyle & WS_BORDER)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_BORDER");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00800000L");
-	}
-	if (dwStyle & WS_CAPTION)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_CAPTION");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00C00000L");
-	}
-	if (dwStyle & WS_CHILD)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_CHILD (WS_CHILDWINDOW)");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x40000000L");
-	}
-	if (dwStyle & WS_CLIPCHILDREN)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_CLIPCHILDREN");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x02000000L");
-	}
-	if (dwStyle & WS_CLIPSIBLINGS)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_CLIPSIBLINGS");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x04000000L");
-	}
-	if (dwStyle & WS_DISABLED)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_DISABLED");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x08000000L");
-	}
-	if (dwStyle & WS_DLGFRAME)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_DLGFRAME");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00400000L");
-	}
-	if (dwStyle & WS_GROUP)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_GROUP");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00020000L");
-	}
-	if (dwStyle & WS_HSCROLL)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_HSCROLL");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00100000L");
-	}
-
-	if (dwStyle & WS_MAXIMIZE)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_MAXIMIZE");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x01000000L");
-	}
-	if (dwStyle & WS_MAXIMIZEBOX)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_MAXIMIZEBOX");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00010000L");
-	}
-	if (dwStyle & WS_MINIMIZE)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_MINIMIZE (WS_ICONIC)");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x20000000L");
-	}
-	if (dwStyle & WS_MINIMIZEBOX)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_MINIMIZEBOX");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00020000L");
-	}
-	//if (dwStyle & WS_OVERLAPPED)
-	//{
-	//	m_page2.m_list_styles.InsertItem(i, L"WS_OVERLAPPED (WS_TILED)");
-	//	m_page2.m_list_styles.SetItemText(i++, 1, L"0x00000000L");
-	//}
-	//if (dwStyle & WS_OVERLAPPEDWINDOW)
-	//{
-	//	m_page2.m_list_styles.InsertItem(i, L"WS_OVERLAPPEDWINDOW (WS_TILEDWINDOW)");
-	//	m_page2.m_list_styles.SetItemText(i++, 1, L"0x00CF0000L");
-	//}
-	if (dwStyle & WS_POPUP)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_POPUP");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x80000000L");
-	}
-	//if (dwStyle & WS_POPUPWINDOW)
-	//{
-	//	m_page2.m_list_styles.InsertItem(i, L"WS_POPUPWINDOW");
-	//	m_page2.m_list_styles.SetItemText(i++, 1, L"0x80880000L");
-	//}
-	if (dwStyle & WS_SIZEBOX)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_SIZEBOX (WS_THICKFRAME)");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00040000L");
-	}
-	if (dwStyle & WS_SYSMENU)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_SYSMENU");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00080000L");
-	}
-	if (dwStyle & WS_TABSTOP)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_TABSTOP");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00010000L");
-	}
-	if (dwStyle & WS_VISIBLE)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_VISIBLE");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x10000000L");
-	}
-	if (dwStyle & WS_VSCROLL)
-	{
-		m_page2.m_list_styles.InsertItem(i, L"WS_VSCROLL");
-		m_page2.m_list_styles.SetItemText(i++, 1, L"0x00200000L");
-	}
-
-	i = 0;
-	if (dwExStyle & WS_EX_ACCEPTFILES)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_ACCEPTFILES");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000010L");
-	}
-	if (dwExStyle & WS_EX_APPWINDOW)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_APPWINDOW");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00040000L");
-	}
-	if (dwExStyle & WS_EX_CLIENTEDGE)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_CLIENTEDGE");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000200L");
-	}
-	if (dwExStyle & WS_EX_COMPOSITED)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_COMPOSITED");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x02000000L");
-	}
-	if (dwExStyle & WS_EX_CONTEXTHELP)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_CONTEXTHELP");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000400L");
-	}
-	if (dwExStyle & WS_EX_CONTROLPARENT)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_CONTROLPARENT");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00010000L");
-	}
-	if (dwExStyle & WS_EX_DLGMODALFRAME)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_DLGMODALFRAME");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000001L");
-	}
-	if (dwExStyle & WS_EX_LAYERED)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_LAYERED");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00080000L");
-	}
-	if (dwExStyle & WS_EX_LAYOUTRTL)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_LAYOUTRTL");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00400000L");
-	}
-	//if (dwExStyle & WS_EX_LEFT)
-	//{
-	//	m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_LEFT");
-	//	m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000000L");
-	//}
-	if (dwExStyle & WS_EX_LEFTSCROLLBAR)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_LEFTSCROLLBAR");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00004000L");
-	}
-	//if (dwExStyle & WS_EX_LTRREADING)
-	//{
-	//	m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_LTRREADING");
-	//	m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000000L");
-	//}
-	if (dwExStyle & WS_EX_MDICHILD)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_MDICHILD");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000040L");
-	}
-	if (dwExStyle & WS_EX_NOACTIVATE)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_NOACTIVATE");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x08000000L");
-	}
-	if (dwExStyle & WS_EX_NOINHERITLAYOUT)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_NOINHERITLAYOUT");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00100000L");
-	}
-	if (dwExStyle & WS_EX_NOPARENTNOTIFY)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_NOPARENTNOTIFY");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000004L");
-	}
-	if (dwExStyle & 0x00200000L)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_NOREDIRECTIONBITMAP");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00200000L");
-	}
-	//if (dwExStyle & WS_EX_OVERLAPPEDWINDOW)
-	//{
-	//	m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_OVERLAPPEDWINDOW");
-	//	m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000300L");
-	//}
-	//if (dwExStyle & WS_EX_PALETTEWINDOW)
-	//{
-	//	m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_PALETTEWINDOW");
-	//	m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000188L");
-	//}
-	if (dwExStyle & WS_EX_RIGHT)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_RIGHT");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00001000L");
-	}
-	//if (dwExStyle & WS_EX_RIGHTSCROLLBAR)
-	//{
-	//	m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_RIGHTSCROLLBAR");
-	//	m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000000L");
-	//}
-	if (dwExStyle & WS_EX_RTLREADING)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_RTLREADING");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00002000L");
-	}
-	if (dwExStyle & WS_EX_STATICEDGE)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_STATICEDGE");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00020000L");
-	}
-	if (dwExStyle & WS_EX_TOOLWINDOW)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_TOOLWINDOW");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000080L");
-	}
-	if (dwExStyle & WS_EX_TOPMOST)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_TOPMOST");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000008L");
-	}
-	if (dwExStyle & WS_EX_TRANSPARENT)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_TRANSPARENT");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000020L");
-	}
-	if (dwExStyle & WS_EX_WINDOWEDGE)
-	{
-		m_page2.m_list_exstyles.InsertItem(i, L"WS_EX_WINDOWEDGE");
-		m_page2.m_list_exstyles.SetItemText(i++, 1, L"0x00000100L");
-	}
-
-	m_page2.UpdateData(FALSE);
+	m_page2.SetStyle(dwStyle);
+	m_page2.SetExStyle(dwExStyle);
 }
 
 void CMySpyLiteDlg::UpdateClassData(HWND hWnd)
@@ -594,67 +342,17 @@ void CMySpyLiteDlg::UpdateClassData(HWND hWnd)
 	m_page3.m_clsWndproc.Format(L"0x%p", GetClassLongPtrW(hWnd, GCLP_WNDPROC));
 
 	m_page3.m_clsstyles.Format(L"0x%08XL", cls_style);
+
 	m_page3.m_list_clsstyle.DeleteAllItems();
-	int i = 0;
-	if (cls_style & CS_BYTEALIGNCLIENT)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_BYTEALIGNCLIENT");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00001000L");
-	}
-	if (cls_style & CS_BYTEALIGNWINDOW)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_BYTEALIGNWINDOW");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00002000L");
-	}
-	if (cls_style & CS_CLASSDC)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_CLASSDC");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000040L");
-	}
-	if (cls_style & CS_DBLCLKS)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_DBLCLKS");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000008L");
-	}
-	if (cls_style & CS_DROPSHADOW)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_DROPSHADOW");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00020000L");
-	}
-	if (cls_style & CS_GLOBALCLASS)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_GLOBALCLASS");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00004000L");
-	}
-	if (cls_style & CS_HREDRAW)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_HREDRAW");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000002L");
-	}
-	if (cls_style & CS_NOCLOSE)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_NOCLOSE");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000200L");
-	}
-	if (cls_style & CS_OWNDC)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_OWNDC");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000020L");
-	}
-	if (cls_style & CS_PARENTDC)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_PARENTDC");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000080L");
-	}
-	if (cls_style & CS_SAVEBITS)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_SAVEBITS");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000800L");
-	}
-	if (cls_style & CS_VREDRAW)
-	{
-		m_page3.m_list_clsstyle.InsertItem(i, L"CS_VREDRAW");
-		m_page3.m_list_clsstyle.SetItemText(i++, 1, L"0x00000001L");
+	int item_index = 0;
+	CString style_value_str;
+	for (auto& style_item : theApp.m_clsStyleMap) {
+		if (cls_style & style_item.first) {
+			style_value_str.Format(L"0x%08XL", style_item.first);
+			m_page3.m_list_clsstyle.InsertItem(item_index, style_item.second);
+			m_page3.m_list_clsstyle.SetItemText(item_index, 1, style_value_str);
+			++item_index;
+		}
 	}
 
 	m_page3.UpdateData(FALSE);
@@ -748,7 +446,6 @@ void CMySpyLiteDlg::UpdateImageData(HWND hWnd) {
 
 void CMySpyLiteDlg::UpdateToolsData(HWND hWnd)
 {
-	m_page6.m_hCurWnd = hWnd;
 	CWnd* pWnd = CWnd::FromHandle(hWnd);
 
 	m_page6.m_chkVisible = pWnd->IsWindowVisible();
@@ -795,30 +492,3 @@ BOOL CMySpyLiteDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialog::PreTranslateMessage(pMsg);
 }
 
-std::wstring CMySpyLiteDlg::NTFilePath2DosFilePath(std::wstring name)
-{
-	WCHAR szDriveStr[MAX_PATH+1] = { 0 };
-	WCHAR szDeviceStr[MAX_PATH+1] = { 0 };
-	WCHAR szDrive[3] = { 0 };
-	int cchDevName = 0;
-
-	if (GetLogicalDriveStringsW(MAX_PATH, szDriveStr) == 0)
-	{
-		return L"";
-	}
-	for (int i = 0; szDriveStr[i]; i += 4)
-	{
-		wcsncpy(szDrive, szDriveStr + i, 2);
-		if (!QueryDosDeviceW(szDrive, szDeviceStr, MAX_PATH))
-		{
-			return L"";
-		}
-		cchDevName = wcslen(szDeviceStr);
-		if (wcsnicmp(szDeviceStr, name.c_str(), cchDevName) == 0) //比较前缀
-		{
-			name.replace(0, cchDevName, szDrive);
-			return name;
-		}
-	}
-	return L"";
-}

@@ -28,7 +28,7 @@
 #include <Psapi.h>
 #pragma comment(lib,"psapi.lib")
 #include <string>
-
+#include <map>
 
 
 #if defined _M_IX86

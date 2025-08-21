@@ -51,6 +51,7 @@ BOOL CClassPage::OnInitDialog()
 	CTabPage::OnInitDialog();
 
 	// :  在此添加额外的初始化
+	SetWindowTheme(m_list_clsstyle, L"Explorer", nullptr);
 	m_list_clsstyle.SetExtendedStyle(m_list_clsstyle.GetExtendedStyle() | LVS_EX_FULLROWSELECT);
 	CRect rc; m_list_clsstyle.GetClientRect(&rc);
 	int cx = rc.Width() - GetSystemMetrics(SM_CXVSCROLL);

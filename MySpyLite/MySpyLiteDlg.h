@@ -63,6 +63,5 @@ public:
 	void UpdateToolsData(HWND hWnd);
 	virtual void OnOK();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	static std::wstring NTFilePath2DosFilePath(std::wstring name);
 	CEdit m_hexEdit;
 };

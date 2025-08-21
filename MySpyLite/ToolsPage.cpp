@@ -7,7 +7,7 @@
 #include "afxdialogex.h"
 #include "SendMsgDlg.h"
 #include "Constants.h"
-
+#include "Utils.h"
 
 // CToolsPage 对话框
 
@@ -26,7 +26,6 @@ CToolsPage::CToolsPage(CWnd* pParent /*=nullptr*/)
 	, m_cxpos(0)
 	, m_cypos(0)
 	, m_title(_T(""))
-	, m_hCurWnd(NULL)
 {
 
 }
@@ -73,14 +72,11 @@ END_MESSAGE_MAP()
 
 // CToolsPage 消息处理程序
 
-
-#define CHECK_HWND() do{ UpdateData(); if (!::IsWindow(m_hCurWnd)) { MessageBoxW(L"窗口句柄无效。"); return; }} while(0)
-
 void CToolsPage::OnBnClickedVisible()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::ShowWindow(m_hCurWnd, m_chkVisible ? SW_SHOW : SW_HIDE);
+	::ShowWindow(theApp.m_curWnd, m_chkVisible ? SW_SHOW : SW_HIDE);
 }
 
 
@@ -88,7 +84,7 @@ void CToolsPage::OnBnClickedEnabled()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::EnableWindow(m_hCurWnd, m_chkEnabled);
+	::EnableWindow(theApp.m_curWnd, m_chkEnabled);
 }
 
 
@@ -96,7 +92,7 @@ void CToolsPage::OnBnClickedReadonly()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::SendMessageW(m_hCurWnd, EM_SETREADONLY, (WPARAM)m_chkReadonly, 0);
+	::SendMessageW(theApp.m_curWnd, EM_SETREADONLY, (WPARAM)m_chkReadonly, 0);
 }
 
 
@@ -104,7 +100,7 @@ void CToolsPage::OnBnClickedTopmost()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::SetWindowPos(m_hCurWnd, m_chkTopmost ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	::SetWindowPos(theApp.m_curWnd, m_chkTopmost ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
 
@@ -112,7 +108,7 @@ void CToolsPage::OnBnClickedMaximized()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::ShowWindow(m_hCurWnd, m_chkMaximized ? SW_SHOWMAXIMIZED : SW_RESTORE);
+	::ShowWindow(theApp.m_curWnd, m_chkMaximized ? SW_SHOWMAXIMIZED : SW_RESTORE);
 }
 
 
@@ -120,7 +116,7 @@ void CToolsPage::OnBnClickedMinimized()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::ShowWindow(m_hCurWnd, m_chkMinimized ? SW_SHOWMINIMIZED : SW_RESTORE);
+	::ShowWindow(theApp.m_curWnd, m_chkMinimized ? SW_SHOWMINIMIZED : SW_RESTORE);
 }
 
 
@@ -128,7 +124,7 @@ void CToolsPage::OnBnClickedKillNormal()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::SendMessageW(m_hCurWnd, WM_CLOSE, 0, 0);
+	::SendMessageW(theApp.m_curWnd, WM_CLOSE, 0, 0);
 }
 
 
@@ -138,7 +134,7 @@ void CToolsPage::OnBnClickedKillSetparent()
 	CHECK_HWND();
 	CStatic stc;
 	stc.Create(L"", 0, { 0,0,0,0 }, this, IDC_STATIC);
-	::SetParent(m_hCurWnd, stc.GetSafeHwnd());
+	::SetParent(theApp.m_curWnd, stc.GetSafeHwnd());
 	stc.SendMessage(WM_CLOSE);
 }
 
@@ -155,7 +151,7 @@ void CToolsPage::OnBnClickedKillSendmsg()
 	GetDlgItem(IDC_KILL_SENDMSG)->SetWindowTextW(L"执行中 请稍候");
 	GetDlgItem(IDC_KILL_SENDMSG)->EnableWindow(FALSE);
 	for (UINT msg = 0; msg < 0xffff; ++msg)
-		::PostMessageW(m_hCurWnd, msg, 0, 0);
+		::PostMessageW(theApp.m_curWnd, msg, 0, 0);
 	GetDlgItem(IDC_KILL_SENDMSG)->SetWindowTextW(L"强力关闭 (方式2) (不推荐)");
 	GetDlgItem(IDC_KILL_SENDMSG)->EnableWindow(TRUE);
 }
@@ -205,7 +201,7 @@ void CToolsPage::OnBnClickedGetFontInfo()
 	CHECK_HWND();
 	LOGFONTW lf;
 	
-	CFont *pFont = CWnd::FromHandle(m_hCurWnd)->GetFont();
+	CFont *pFont = CWnd::FromHandle(theApp.m_curWnd)->GetFont();
 	if (pFont != nullptr)
 		pFont->GetLogFont(&lf);
 	else
@@ -267,7 +263,7 @@ void CToolsPage::OnBnClickedApplyPos()
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
 	int x = 0, y = 0;
-	auto hParent = ::GetParent(m_hCurWnd);
+	auto hParent = ::GetParent(theApp.m_curWnd);
 	if (hParent)
 	{
 		RECT rc;
@@ -277,7 +273,7 @@ void CToolsPage::OnBnClickedApplyPos()
 		x = pt.x;
 		y = pt.y;
 	}
-	::SetWindowPos(m_hCurWnd, NULL, m_xpos - x, m_ypos - y, m_cxpos, m_cypos, SWP_NOZORDER);
+	::SetWindowPos(theApp.m_curWnd, NULL, m_xpos - x, m_ypos - y, m_cxpos, m_cypos, SWP_NOZORDER);
 }
 
 
@@ -285,13 +281,13 @@ void CToolsPage::OnBnClickedApplyTitle()
 {
 	// : 在此添加控件通知处理程序代码
 	CHECK_HWND();
-	::SetWindowTextW(m_hCurWnd, m_title);
+	::SetWindowTextW(theApp.m_curWnd, m_title);
 }
 
 
 void CToolsPage::OnBnClickedSendMessage()
 {
 	// : 在此添加控件通知处理程序代码
-	CSendMsgDlg dlg(m_hCurWnd);
+	CSendMsgDlg dlg(theApp.m_curWnd);
 	dlg.DoModal();
 }

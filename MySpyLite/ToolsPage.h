@@ -36,7 +36,6 @@ public:
 	int m_cxpos;
 	int m_cypos;
 	CString m_title;
-	HWND m_hCurWnd;
 	afx_msg void OnBnClickedVisible();
 	afx_msg void OnBnClickedEnabled();
 	afx_msg void OnBnClickedReadonly();
