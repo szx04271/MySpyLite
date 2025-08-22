@@ -9,6 +9,6 @@
 #endif
 
 // 'f'=fork
-#define VERSION_STR L"f1.6"
+#define VERSION_STR L"f1.06"
 
 inline constexpr const wchar_t* g_title = L"New Spylite [" PLATFORM_STR L"] 版本 " VERSION_STR L" - by szx0427";

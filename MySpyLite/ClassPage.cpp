@@ -6,6 +6,7 @@
 #include "ClassPage.h"
 #include "afxdialogex.h"
 #include "Utils.h"
+#include "AddStyleDlg.h"
 
 // CClassPage 对话框
 
@@ -96,5 +97,13 @@ void CClassPage::SetClsStyle(DWORD value) {
 }
 
 void CClassPage::OnBnClickedAddClsStyle() {
-	
+	CHECK_HWND();
+
+	auto available_styles = GetOtherStyles(theApp.m_clsStyleMap, m_list_clsstyle);
+	CAddStyleDlg dlg(available_styles, this);
+	dlg.DoModal();
+
+	CHECK_HWND();
+	SetClassLongW(theApp.m_curWnd, GCL_STYLE, m_clsStyle | dlg.m_styleToAdd);
+	SetClsStyle(GetClassLongW(theApp.m_curWnd, GCL_STYLE));
 }

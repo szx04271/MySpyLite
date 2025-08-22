@@ -156,5 +156,13 @@ void CStylesPage::OnBnClickedRemoveWndExstyle() {
 }
 
 void CStylesPage::OnBnClickedAddWndExstyle() {
-	// TODO: 在此添加控件通知处理程序代码
+	CHECK_HWND();
+
+	auto available_styles = GetOtherStyles(theApp.m_wndExStyleMap, m_list_exstyles);
+	CAddStyleDlg dlg(available_styles, this);
+	dlg.DoModal();
+
+	CHECK_HWND();
+	SetWindowLongW(theApp.m_curWnd, GWL_EXSTYLE, m_styles | dlg.m_styleToAdd);
+	SetExStyle(GetWindowLongW(theApp.m_curWnd, GWL_EXSTYLE));
 }
