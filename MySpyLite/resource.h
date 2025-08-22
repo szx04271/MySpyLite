@@ -13,6 +13,7 @@
 #define IDD_PAGE_IMAGE                  135
 #define IDD_PAGE_ABOUT                  136
 #define IDD_SEND_MESSAGE                137
+#define IDD_ADD_STYLE                   140
 #define IDC_TAB                         1000
 #define IDC_HWND                        1001
 #define IDC_QUERY                       1003
@@ -93,18 +94,22 @@
 #define IDC_REMOVE_WND_STYLE            1078
 #define IDC_CLASS_HMODULE               1079
 #define IDC_ADD_WND_EXSTYLE             1079
-#define IDC_BUTTON4                     1080
 #define IDC_REMOVE_WND_EXSTYLE          1080
+#define IDC_ADD_CLS_STYLE               1080
 #define IDC_EDIT6                       1081
 #define IDC_CLASS_WNDPROC               1081
+#define IDC_PREDEFINED_STYLES           1081
+#define IDC_REMOVE_CLS_STYLE            1082
+#define IDC_CUSTOMIZE_VALUE             1082
+#define IDC_NEW_STYLE_VALUE             1083
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1085
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

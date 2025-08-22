@@ -75,7 +75,7 @@ END_MESSAGE_MAP()
 void CToolsPage::OnBnClickedVisible()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::ShowWindow(theApp.m_curWnd, m_chkVisible ? SW_SHOW : SW_HIDE);
 }
 
@@ -83,7 +83,7 @@ void CToolsPage::OnBnClickedVisible()
 void CToolsPage::OnBnClickedEnabled()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::EnableWindow(theApp.m_curWnd, m_chkEnabled);
 }
 
@@ -91,7 +91,7 @@ void CToolsPage::OnBnClickedEnabled()
 void CToolsPage::OnBnClickedReadonly()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::SendMessageW(theApp.m_curWnd, EM_SETREADONLY, (WPARAM)m_chkReadonly, 0);
 }
 
@@ -99,7 +99,7 @@ void CToolsPage::OnBnClickedReadonly()
 void CToolsPage::OnBnClickedTopmost()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::SetWindowPos(theApp.m_curWnd, m_chkTopmost ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
@@ -107,7 +107,7 @@ void CToolsPage::OnBnClickedTopmost()
 void CToolsPage::OnBnClickedMaximized()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::ShowWindow(theApp.m_curWnd, m_chkMaximized ? SW_SHOWMAXIMIZED : SW_RESTORE);
 }
 
@@ -115,7 +115,7 @@ void CToolsPage::OnBnClickedMaximized()
 void CToolsPage::OnBnClickedMinimized()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::ShowWindow(theApp.m_curWnd, m_chkMinimized ? SW_SHOWMINIMIZED : SW_RESTORE);
 }
 
@@ -123,7 +123,7 @@ void CToolsPage::OnBnClickedMinimized()
 void CToolsPage::OnBnClickedKillNormal()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::SendMessageW(theApp.m_curWnd, WM_CLOSE, 0, 0);
 }
 
@@ -131,7 +131,7 @@ void CToolsPage::OnBnClickedKillNormal()
 void CToolsPage::OnBnClickedKillSetparent()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	CStatic stc;
 	stc.Create(L"", 0, { 0,0,0,0 }, this, IDC_STATIC);
 	::SetParent(theApp.m_curWnd, stc.GetSafeHwnd());
@@ -142,7 +142,7 @@ void CToolsPage::OnBnClickedKillSetparent()
 void CToolsPage::OnBnClickedKillSendmsg()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	int ret = MessageBoxW(L"在硬件配置较低的计算机上执行此操作可能导致系统运行速度降低，或使本程序崩溃。\n您确定要执行吗？", 
 		L"警告", MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON2);
 	if (ret != IDYES)
@@ -198,7 +198,7 @@ void CToolsPage::OnTimer(UINT_PTR nIDEvent)
 void CToolsPage::OnBnClickedGetFontInfo()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	LOGFONTW lf;
 	
 	CFont *pFont = CWnd::FromHandle(theApp.m_curWnd)->GetFont();
@@ -261,7 +261,7 @@ void CToolsPage::OnBnClickedGetFontInfo()
 void CToolsPage::OnBnClickedApplyPos()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	int x = 0, y = 0;
 	auto hParent = ::GetParent(theApp.m_curWnd);
 	if (hParent)
@@ -280,14 +280,13 @@ void CToolsPage::OnBnClickedApplyPos()
 void CToolsPage::OnBnClickedApplyTitle()
 {
 	// : 在此添加控件通知处理程序代码
-	CHECK_HWND();
+	UPDATE_AND_CHECK_HWND();
 	::SetWindowTextW(theApp.m_curWnd, m_title);
 }
 
 
 void CToolsPage::OnBnClickedSendMessage()
 {
-	// : 在此添加控件通知处理程序代码
-	CSendMsgDlg dlg(theApp.m_curWnd);
+	CSendMsgDlg dlg(theApp.m_curWnd, theApp.m_pMainWnd);
 	dlg.DoModal();
 }

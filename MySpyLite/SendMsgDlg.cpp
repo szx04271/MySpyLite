@@ -5,7 +5,7 @@
 #include "MySpyLite.h"
 #include "SendMsgDlg.h"
 #include "afxdialogex.h"
-
+#include "Utils.h"
 
 // CSendMsgDlg 对话框
 
@@ -36,6 +36,7 @@ void CSendMsgDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_RESULT, m_result);
 	DDX_Control(pDX, IDC_RESULT, m_resultCtrl);
 	DDX_Text(pDX, IDC_MESSAGE, m_msg);
+	DDX_Control(pDX, IDC_SEND_TYPE, m_typeCtrl);
 }
 
 
@@ -52,8 +53,8 @@ END_MESSAGE_MAP()
 void CSendMsgDlg::OnBnClickedSend()
 {
 	// : 在此添加控件通知处理程序代码
-	if (!::IsWindow(m_hCurWnd)) { MessageBoxW(L"窗口句柄无效。"); return; }
-	UpdateData();
+	UPDATE_AND_CHECK_HWND();
+
 	if (m_type == 0)
 	{
 		m_result = ::SendMessageW(m_hCurWnd, m_msg, m_wp, m_lp);
@@ -82,3 +83,13 @@ void CSendMsgDlg::OnNMClickMsgDoc(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 
+BOOL CSendMsgDlg::OnInitDialog() {
+	CDialog::OnInitDialog();
+
+	m_typeCtrl.AddString(L"SendMessage(同步，有结果)");
+	m_typeCtrl.AddString(L"PostMessage(异步，无结果)");
+	m_typeCtrl.SetCurSel(m_type);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
+}

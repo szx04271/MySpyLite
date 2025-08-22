@@ -1,5 +1,6 @@
 #pragma once
 #include "TabPage.h"
+#include "StyleListCtrl.h"
 
 // CStylesPage 对话框
 
@@ -21,15 +22,17 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CListCtrl m_list_styles;
-	CListCtrl m_list_exstyles;
+	CStyleListCtrl m_list_styles;
+	CStyleListCtrl m_list_exstyles;
 	CString m_stc_styles;
 	CString m_stc_exstyles;
 	DWORD m_styles{}, m_exstyles{};
-	virtual BOOL OnInitDialog();
 	afx_msg void OnNMClickStylesMsdn(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClickExstylesMsdn(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedRemoveWndStyle();
 	void SetStyle(DWORD value);
 	void SetExStyle(DWORD value);
+	afx_msg void OnBnClickedAddWndStyle();
+	afx_msg void OnBnClickedRemoveWndExstyle();
+	afx_msg void OnBnClickedAddWndExstyle();
 };

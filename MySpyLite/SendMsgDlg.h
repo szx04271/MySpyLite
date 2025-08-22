@@ -31,4 +31,6 @@ public:
 	CEdit m_resultCtrl;
 	UINT m_msg;
 	afx_msg void OnNMClickMsgDoc(NMHDR* pNMHDR, LRESULT* pResult);
+	virtual BOOL OnInitDialog();
+	CComboBox m_typeCtrl;
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "TabPage.h"
+#include "StyleListCtrl.h"
 
 // CClassPage 对话框
 
@@ -21,10 +22,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	virtual BOOL OnInitDialog();
 	CString m_clsname;
-	CString m_clsstyles;
-	CListCtrl m_list_clsstyle;
+	CString m_clsStyleStr;
+	CStyleListCtrl m_list_clsstyle;
 	afx_msg void OnNMClickClassstylesMsdn(NMHDR *pNMHDR, LRESULT *pResult);
 	CString m_atom;
 	CString m_hbrBkgnd;
@@ -32,4 +32,8 @@ public:
 	CString m_clsHiconSm;
 	CString m_clsHmodule;
 	CString m_clsWndproc;
+	afx_msg void OnBnClickedRemoveClsStyle();
+	void SetClsStyle(DWORD value);
+	DWORD m_clsStyle{};
+	afx_msg void OnBnClickedAddClsStyle();
 };

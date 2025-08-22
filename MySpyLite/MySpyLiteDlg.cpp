@@ -341,21 +341,8 @@ void CMySpyLiteDlg::UpdateClassData(HWND hWnd)
 	m_page3.m_clsHiconSm.Format(L"0x" FMT_PTR, GetClassLongPtrW(hWnd, GCLP_HICONSM));
 	m_page3.m_clsWndproc.Format(L"0x%p", GetClassLongPtrW(hWnd, GCLP_WNDPROC));
 
-	m_page3.m_clsstyles.Format(L"0x%08XL", cls_style);
-
-	m_page3.m_list_clsstyle.DeleteAllItems();
-	int item_index = 0;
-	CString style_value_str;
-	for (auto& style_item : theApp.m_clsStyleMap) {
-		if (cls_style & style_item.first) {
-			style_value_str.Format(L"0x%08XL", style_item.first);
-			m_page3.m_list_clsstyle.InsertItem(item_index, style_item.second);
-			m_page3.m_list_clsstyle.SetItemText(item_index, 1, style_value_str);
-			++item_index;
-		}
-	}
-
-	m_page3.UpdateData(FALSE);
+	m_page3.m_clsStyleStr.Format(L"0x%08XL", cls_style);
+	m_page3.SetClsStyle(cls_style);
 }
 
 void CMySpyLiteDlg::UpdateWindowsData(HWND hWnd)

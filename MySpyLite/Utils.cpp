@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Utils.h"
+#include "StyleListCtrl.h"
 
 std::wstring NtFilePathToDosPath(std::wstring nt_path) {
 	WCHAR szDriveStr[MAX_PATH + 1] = { 0 };
@@ -26,4 +27,27 @@ std::wstring NtFilePathToDosPath(std::wstring nt_path) {
 		}
 	}
 	return L"";
+}
+
+std::vector<StyleMap::const_iterator> GetOtherStyles(const StyleMap& all, const CStyleListCtrl& occupied_list) {
+	std::vector<StyleMap::const_iterator> ret;
+
+	auto occupied_count = occupied_list.GetItemCount();
+	bool occupied;
+	int i;
+	for (auto it = all.begin(); it != all.end(); ++it) {
+		occupied = false;
+		for (i = 0; i < occupied_count; ++i) {
+			if (static_cast<DWORD>(occupied_list.GetItemData(i)) == it->first) {
+				occupied = true;
+				break;
+			}
+		}
+		
+		if (!occupied) {
+			ret.emplace_back(it);
+		}
+	}
+
+	return ret;
 }

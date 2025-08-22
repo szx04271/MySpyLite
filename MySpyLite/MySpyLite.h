@@ -9,9 +9,7 @@
 #endif
 
 #include "resource.h"		// 主符号
-
-// style mapping
-#define SM(style_macro) {style_macro, L ## #style_macro}
+#include "Utils.h"
 
 // CMySpyLiteApp:
 // 有关此类的实现，请参阅 MySpyLite.cpp
@@ -26,9 +24,9 @@ public:
 public:
 	HWND m_curWnd{};
 
-	std::map<DWORD, LPCWSTR> m_wndStyleMap;
-	std::map<DWORD, LPCWSTR> m_wndExStyleMap;
-	std::map<DWORD, LPCWSTR> m_clsStyleMap;
+	StyleMap m_wndStyleMap;
+	StyleMap m_wndExStyleMap;
+	StyleMap m_clsStyleMap;
 
 	virtual BOOL InitInstance();
 
