@@ -80,6 +80,9 @@ BOOL CMySpyLiteApp::InitInstance()
 		TRACE(traceAppMsg, 0, "警告: 对话框创建失败，应用程序将意外终止。\n");
 	}
 
+	if (m_wndProcFinderDllPath.empty() == false) {
+		DeleteFileW(m_wndProcFinderDllPath.c_str());
+	}
 
 #if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
 	ControlBarCleanUp();

@@ -129,11 +129,13 @@ void CStylesPage::OnBnClickedAddWndStyle() {
 
 	auto available_styles = GetOtherStyles(theApp.m_wndStyleMap, m_list_styles);
 	CAddStyleDlg dlg(available_styles, this);
-	dlg.DoModal();
+	auto dlg_result = dlg.DoModal();
 
-	CHECK_HWND();
-	SetWindowLongW(theApp.m_curWnd, GWL_STYLE, m_styles | dlg.m_styleToAdd);
-	SetStyle(GetWindowLongW(theApp.m_curWnd, GWL_STYLE));
+	if (dlg_result == IDOK) {
+		CHECK_HWND();
+		SetWindowLongW(theApp.m_curWnd, GWL_STYLE, m_styles | dlg.m_styleToAdd);
+		SetStyle(GetWindowLongW(theApp.m_curWnd, GWL_STYLE));
+	}
 }
 
 void CStylesPage::OnBnClickedRemoveWndExstyle() {
@@ -160,9 +162,11 @@ void CStylesPage::OnBnClickedAddWndExstyle() {
 
 	auto available_styles = GetOtherStyles(theApp.m_wndExStyleMap, m_list_exstyles);
 	CAddStyleDlg dlg(available_styles, this);
-	dlg.DoModal();
+	auto dlg_result = dlg.DoModal();
 
-	CHECK_HWND();
-	SetWindowLongW(theApp.m_curWnd, GWL_EXSTYLE, m_styles | dlg.m_styleToAdd);
-	SetExStyle(GetWindowLongW(theApp.m_curWnd, GWL_EXSTYLE));
+	if (dlg_result == IDOK) {
+		CHECK_HWND();
+		SetWindowLongW(theApp.m_curWnd, GWL_EXSTYLE, m_styles | dlg.m_styleToAdd);
+		SetExStyle(GetWindowLongW(theApp.m_curWnd, GWL_EXSTYLE));
+	}
 }

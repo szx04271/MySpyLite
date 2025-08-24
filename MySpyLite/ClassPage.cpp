@@ -101,9 +101,11 @@ void CClassPage::OnBnClickedAddClsStyle() {
 
 	auto available_styles = GetOtherStyles(theApp.m_clsStyleMap, m_list_clsstyle);
 	CAddStyleDlg dlg(available_styles, this);
-	dlg.DoModal();
+	auto dlg_result = dlg.DoModal();
 
-	CHECK_HWND();
-	SetClassLongW(theApp.m_curWnd, GCL_STYLE, m_clsStyle | dlg.m_styleToAdd);
-	SetClsStyle(GetClassLongW(theApp.m_curWnd, GCL_STYLE));
+	if (dlg_result == IDOK) {
+		CHECK_HWND();
+		SetClassLongW(theApp.m_curWnd, GCL_STYLE, m_clsStyle | dlg.m_styleToAdd);
+		SetClsStyle(GetClassLongW(theApp.m_curWnd, GCL_STYLE));
+	}
 }

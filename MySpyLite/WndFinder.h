@@ -1,10 +1,6 @@
 #pragma once
 #include "afxwin.h"
 
-#ifndef WM_QUERYRESULT
-#define WM_QUERYRESULT (WM_USER + 1)
-#endif
-
 class CWndFinder :
 	public CStatic
 {

@@ -14,6 +14,10 @@
 #define IDD_PAGE_ABOUT                  136
 #define IDD_SEND_MESSAGE                137
 #define IDD_ADD_STYLE                   140
+#define IDR_DLL1                        143
+#define IDR_WNDPROC_FINDER_64           143
+#define IDR_DLL2                        144
+#define IDR_WNDPROC_FINDER_32           144
 #define IDC_TAB                         1000
 #define IDC_HWND                        1001
 #define IDC_QUERY                       1003
@@ -26,10 +30,12 @@
 #define IDC_PID                         1012
 #define IDC_TID                         1013
 #define IDC_PATH                        1014
+#define IDC_WNDPROC                     1015
 #define IDC_CLIENT_RECT                 1016
 #define IDC_OPEN_DIR                    1017
 #define IDC_BASIC_STYLES                1018
 #define IDC_CLIENT_RELATIVE_POS         1018
+#define IDC_WHETHER_64BIT               1019
 #define IDC_LIST_STYLES                 1020
 #define IDC_LIST_EXSTYLES               1021
 #define IDC_EX_STYLES                   1022
@@ -102,14 +108,16 @@
 #define IDC_REMOVE_CLS_STYLE            1082
 #define IDC_CUSTOMIZE_VALUE             1082
 #define IDC_NEW_STYLE_VALUE             1083
+#define IDC_USE_WNDPROC                 1085
+#define IDC_WNDPROC_REMINDER_ICON       1086
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        142
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1085
+#define _APS_NEXT_CONTROL_VALUE         1087
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

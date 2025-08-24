@@ -28,6 +28,8 @@ public:
 	StyleMap m_wndExStyleMap;
 	StyleMap m_clsStyleMap;
 
+	std::wstring m_wndProcFinderDllPath;
+
 	virtual BOOL InitInstance();
 
 	void InitWndStyleMap();

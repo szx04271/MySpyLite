@@ -12,3 +12,12 @@ using StyleMap = std::list<std::pair<DWORD, LPCWSTR>>;
 
 class CStyleListCtrl;
 std::vector<StyleMap::const_iterator> GetOtherStyles(const StyleMap &all, const CStyleListCtrl &occupied_list);
+
+std::wstring GetTempFilePath();
+
+bool ReleaseWndProcFinderDll();
+
+bool InjectDll(DWORD pid, const std::wstring & dll_path);
+
+// -1 for unknown, 0 for false, 1 for true
+int8_t Is64BitProcess(HANDLE hProcess);

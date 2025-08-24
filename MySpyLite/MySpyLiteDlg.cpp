@@ -290,11 +290,26 @@ void CMySpyLiteDlg::UpdateGeneralData(HWND hWnd)
 
 	m_page1.m_ctrlId = pWnd->GetDlgCtrlID();
 	m_page1.m_tid = GetWindowThreadProcessId(hWnd, &m_page1.m_pid);
+	int8_t is64Bit = -1; // -1 for unknown, 0 for false, 1 for true
 	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, m_page1.m_pid);
-	if (dw = GetLastError())
+	if (dw = GetLastError()) {
 		m_page1.m_path.Format(L"OpenProcess失败。错误代码：%u。", dw);
+		m_page1.m_whether64Bit.Format(L"OpenProcess失败。错误代码：%u。", dw);
+	}
 	else
 	{
+		is64Bit = Is64BitProcess(hProcess);
+		if (is64Bit == -1) {
+			dw = GetLastError();
+			m_page1.m_whether64Bit.Format(L"检测失败。错误代码：%u。", dw);
+		}
+		else if (is64Bit == 0) {
+			m_page1.m_whether64Bit = L"否";
+		}
+		else {
+			m_page1.m_whether64Bit = L"是";
+		}
+
 		// 32/64 bit GENERAL
 		WCHAR dosPath[MAX_PATH + 1];
 		GetProcessImageFileNameW(hProcess, dosPath, MAX_PATH + 1);
@@ -307,7 +322,68 @@ void CMySpyLiteDlg::UpdateGeneralData(HWND hWnd)
 			std::wstring filePath = NtFilePathToDosPath(dosPath);
 			m_page1.m_path = filePath.c_str();
 		}
+	}
 
+	bool need_wndproc = m_page1.m_useWndProcCtrl.GetCheck();
+	if (need_wndproc) {
+		constexpr int8_t isSpylite64Bit =
+#ifdef _M_X64
+			1
+#else
+			0
+#endif
+			;
+
+		// 一个进程内用管道会崩溃，得特殊处理fuck myself的情况
+		if (m_page1.m_pid != GetCurrentProcessId()) {
+			if (is64Bit == -1) {
+				m_page1.m_wndProcStr = L"由于未知目标程序是否为64位，无法注入DLL。";
+			}
+			else if (is64Bit == isSpylite64Bit) {
+				ASSERT(!theApp.m_wndProcFinderDllPath.empty()); // dll must be released
+
+				DWORD err = ERROR_SUCCESS;
+				// create pipe for interprocess communication
+				HANDLE hPipe = CreateNamedPipeW(
+					g_pipeName,
+					PIPE_ACCESS_DUPLEX,
+					PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+					PIPE_UNLIMITED_INSTANCES,
+					0,
+					0,
+					0,
+					nullptr
+				);
+				if (hPipe != INVALID_HANDLE_VALUE) {
+					bool inject_success = InjectDll(m_page1.m_pid, theApp.m_wndProcFinderDllPath);
+					if (inject_success) {
+						ConnectNamedPipe(hPipe, nullptr); // await dll to connect
+						DWORD junk;
+						WriteFile(hPipe, &hWnd, sizeof(HWND), &junk, nullptr);
+						void* wndproc{};
+						ReadFile(hPipe, &wndproc, sizeof(wndproc), &junk, nullptr);
+						CloseHandle(hPipe);
+
+						m_page1.m_wndProcStr.Format(L"0x%p", wndproc);
+					}
+					else {
+						err = GetLastError();
+						m_page1.m_wndProcStr.Format(L"注入DLL失败（错误代码：%u），请检查spylite权限。", err);
+					}
+				}
+				else {
+					err = GetLastError();
+					m_page1.m_wndProcStr.Format(L"创建管道失败（错误代码：%u）。", err);
+				}
+			}
+			else {
+				m_page1.m_wndProcStr = L"目标程序与Spylite位数不符，无法注入DLL。";
+			}
+		}
+		else {
+			void* wndproc = reinterpret_cast<void*>(GetWindowLongPtrW(hWnd, GWLP_WNDPROC));
+			m_page1.m_wndProcStr.Format(L"0x%p", wndproc);
+		}
 	}
 
 	m_page1.UpdateData(FALSE);

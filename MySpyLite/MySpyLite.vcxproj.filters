@@ -135,6 +135,8 @@
     <None Include="res\MySpyLite.rc2">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="..\x64\Release\WndProcFinder.dll" />
+    <None Include="..\Release\WndProcFinder.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\MySpyLite.ico">

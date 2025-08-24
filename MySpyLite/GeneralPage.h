@@ -21,7 +21,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	HBRUSH m_hBkBrush;
 	CString m_clsName;
 	CString m_cltRc;
 	int m_ctrlId;
@@ -32,4 +31,14 @@ public:
 	CString m_title;
 	afx_msg void OnNMClickOpenDir(NMHDR *pNMHDR, LRESULT *pResult);
 	CString m_relativeRc;
+	HICON m_hInfoIcon{};
+	virtual BOOL OnInitDialog();
+	CStatic m_wndprocReminderIcon;
+	CButton m_useWndProcCtrl;
+	CString m_wndProcStr;
+	afx_msg void OnBnClickedUseWndproc();
+	void TryReleaseWndProcFinderDll();
+	CString m_whether64Bit;
+	CEdit m_wndprocEditBox;
+	afx_msg void OnDestroy();
 };

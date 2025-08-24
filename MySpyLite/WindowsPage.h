@@ -1,10 +1,6 @@
 #pragma once
 #include "TabPage.h"
 
-#ifndef WM_QUERYRESULT
-#define WM_QUERYRESULT (WM_USER + 1)
-#endif
-
 // CWindowsPage 对话框
 
 class CWindowsPage : public CTabPage
