@@ -112,6 +112,25 @@ BOOL CMySpyLiteDlg::OnInitDialog()
 	m_page7.MoveWindow(&rc);
 	m_page7.ShowWindow(SW_HIDE);
 
+	// accept command line arguments
+	if (__argc >= 2) {
+		auto str_wnd = __wargv[1];
+		wchar_t* end_ptr = str_wnd;
+		auto probable_hwnd =
+#ifdef _M_X64
+			wcstoll(str_wnd, &end_ptr, 16);
+#else
+			wcstol(str_wnd, &end_ptr, 16);
+#endif
+		// validate argument
+		if (end_ptr[0] == 0) {
+			// adapt to old shit hill code
+			m_sWnd = str_wnd;
+			UpdateData(FALSE);
+			OnBnClickedQuery();
+		}
+	}
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
