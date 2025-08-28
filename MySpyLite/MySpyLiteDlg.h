@@ -64,4 +64,6 @@ public:
 	virtual void OnOK();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CEdit m_hexEdit;
+protected:
+	afx_msg LRESULT OnSetTarget(WPARAM wParam, LPARAM lParam);
 };

@@ -13,7 +13,7 @@
 #endif
 
 // 'f'=fork
-#define VERSION_STR L"f1.07.00"
+#define VERSION_STR L"f1.07.02"
 
 inline constexpr const wchar_t* g_title = L"New Spylite [" PLATFORM_STR L"] 版本 " VERSION_STR L" - by szx0427";
 inline constexpr const wchar_t* g_regSubKey = L"Software\\szx0427\\NewSpyLite";
@@ -22,7 +22,10 @@ inline constexpr const wchar_t* g_regValueName = L"WndprocNeeded";
 #endif // !defined WND_FINDER_DLL
 
 enum MyMessages : UINT {
-	WM_QUERYRESULT = WM_USER + 1
+	// wParam: hwnd
+	// lParam: unused
+	WM_SET_TARGET = WM_USER + 1,
+	WM_LEGACYQUERYRESULT
 };
 
 inline constexpr LPCWSTR g_pipeName = L"\\\\.\\pipe\\SZX_SPYLITE_WNDPROC_FINDER_20250824";

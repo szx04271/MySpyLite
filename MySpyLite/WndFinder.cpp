@@ -61,7 +61,7 @@ void CWndFinder::OnLButtonUp(UINT nFlags, CPoint point)
 	{
 		ReleaseLastFound();
 		m_hLastFound = NULL;
-		GetParent()->SendMessageW(WM_QUERYRESULT);
+		GetParent()->SendMessageW(WM_LEGACYQUERYRESULT);
 	}
 
 	CStatic::OnLButtonUp(nFlags, point);

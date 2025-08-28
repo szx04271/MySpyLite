@@ -112,7 +112,7 @@ void CWindowsPage::OnBnClickedQuerySelection()
 	}
 	int sel = m_list_children.GetNextSelectedItem(pos);
 	GetParent()->GetParent()->
-		SendMessageW(WM_QUERYRESULT, 0, 
+		SendMessageW(WM_LEGACYQUERYRESULT, 0, 
 		(LPARAM)((LPCWSTR)m_list_children.GetItemText(sel, 0) + 2)); // +2是跳过“0x”前缀
 }
 
@@ -121,7 +121,7 @@ void CWindowsPage::OnNMClickLnkqueryparent(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// : 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
-	GetParent()->GetParent()->SendMessageW(WM_QUERYRESULT, 0, (LPARAM)(LPCWSTR)m_parentWnd);
+	GetParent()->GetParent()->SendMessageW(WM_LEGACYQUERYRESULT, 0, (LPARAM)(LPCWSTR)m_parentWnd);
 
 	*pResult = 0;
 }
@@ -131,7 +131,7 @@ void CWindowsPage::OnNMClickLnkqueryowner(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// : 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
-	GetParent()->GetParent()->SendMessageW(WM_QUERYRESULT, 0, (LPARAM)(LPCWSTR)m_ownerWnd);
+	GetParent()->GetParent()->SendMessageW(WM_LEGACYQUERYRESULT, 0, (LPARAM)(LPCWSTR)m_ownerWnd);
 
 	*pResult = 0;
 }
@@ -141,7 +141,7 @@ void CWindowsPage::OnNMClickLnkqueryprevhwnd(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// : 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
-	GetParent()->GetParent()->SendMessageW(WM_QUERYRESULT, 0, (LPARAM)(LPCWSTR)m_prevWnd);
+	GetParent()->GetParent()->SendMessageW(WM_LEGACYQUERYRESULT, 0, (LPARAM)(LPCWSTR)m_prevWnd);
 
 	*pResult = 0;
 }
@@ -151,7 +151,7 @@ void CWindowsPage::OnNMClickLnkquerynexthwnd(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// : 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
-	GetParent()->GetParent()->SendMessageW(WM_QUERYRESULT, 0, (LPARAM)(LPCWSTR)m_nextWnd);
+	GetParent()->GetParent()->SendMessageW(WM_LEGACYQUERYRESULT, 0, (LPARAM)(LPCWSTR)m_nextWnd);
 
 	*pResult = 0;
 }

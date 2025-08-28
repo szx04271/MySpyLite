@@ -180,7 +180,7 @@ void CToolsPage::OnTimer(UINT_PTR nIDEvent)
 			n = 0;
 			KillTimer(1);
 			str.Format(FMT_PTR, hwnd);
-			GetParent()->GetParent()->SendMessageW(WM_QUERYRESULT, 0, (LPARAM)(LPCWSTR)str);
+			GetParent()->GetParent()->SendMessageW(WM_LEGACYQUERYRESULT, 0, (LPARAM)(LPCWSTR)str);
 			GetParent()->GetParent()->SetWindowTextW(g_title);
 			MessageBeep(MB_OK);
 			CTabPage::OnTimer(nIDEvent);

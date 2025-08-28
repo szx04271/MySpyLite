@@ -43,9 +43,10 @@ BEGIN_MESSAGE_MAP(CMySpyLiteDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_TOPMOST, &CMySpyLiteDlg::OnBnClickedTopmost)
 	ON_BN_CLICKED(IDC_QUERY, &CMySpyLiteDlg::OnBnClickedQuery)
-	ON_MESSAGE(WM_QUERYRESULT, &CMySpyLiteDlg::OnQueryResult)
+	ON_MESSAGE(WM_LEGACYQUERYRESULT, &CMySpyLiteDlg::OnQueryResult)
 	ON_WM_ERASEBKGND()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CMySpyLiteDlg::OnTcnSelchangeTab)
+	ON_MESSAGE(WM_SET_TARGET, &CMySpyLiteDlg::OnSetTarget)
 END_MESSAGE_MAP()
 
 
@@ -202,6 +203,8 @@ void CMySpyLiteDlg::OnBnClickedQuery()
 	UpdateWindowsData(hWnd);
 	UpdateImageData(hWnd);
 	UpdateToolsData(hWnd);
+
+	SetForegroundWindow(); // make taskbar icon flash
 }
 
 LRESULT CMySpyLiteDlg::OnQueryResult(WPARAM, LPARAM lParam)
@@ -574,3 +577,10 @@ BOOL CMySpyLiteDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialog::PreTranslateMessage(pMsg);
 }
 
+LRESULT CMySpyLiteDlg::OnSetTarget(WPARAM wParam, LPARAM lParam) {
+	// adapt to old shit hill code
+	m_sWnd.Format(FMT_PTR, wParam);
+	UpdateData(FALSE);
+	OnBnClickedQuery();
+	return 0;
+}
